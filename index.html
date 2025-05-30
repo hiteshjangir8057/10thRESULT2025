@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dynamic Excel Table with Percentage</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      padding: 2rem;
+      margin: 0;
+    }
+    .container {
+      max-width: 1300px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+    }
+    #searchInput {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+      border-radius: 50px;
+      border: 1px solid #ccc;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+    button,
+    input[type="file"]::file-selector-button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover,
+    input[type="file"]::file-selector-button:hover {
+      background: #2c80b4;
+    }
+    .table-wrapper {
+      overflow: auto;
+      max-height: 70vh;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 1000px;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: #2c3e50;
+      color: white;
+      padding: 0.75rem;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    tbody td {
+      padding: 0.6rem;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+    tr:hover {
+      background-color: #f1f7ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Dynamic Excel Table with Percentage Format</h2>
+    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="🔍 Search anything...">
+    <div class="buttons">
+      <input type="file" id="fileInput" accept=".xlsx, .xls" onchange="handleFile(event)">
+      <button onclick="exportTableToExcel('excelTable')">⬇ Export to Excel</button>
+    </div>
+    <div class="table-wrapper">
+      <table id="excelTable">
+        <thead id="tableHead"><tr><th>Roll</th><th>Name</th><th>Father</th><th>Mother</th><th>Hindi</th><th>English</th><th>Science</th><th>Social</th><th>Math</th><th>Percentage</th><th>Total</th><th>Percentage</th></tr></thead>
+        <tbody id="tableBody"><tr><td>1634662</td><td>AASHI SINGH KARNAWAT</td><td>KHEM SINGH KARNAWAT</td><td>RINKI</td><td>078D</td><td>74</td><td>41</td><td>71</td><td>48</td><td>61.67%</td><td>370</td><td>61.67%</td></tr><tr><td>1634663</td><td>ABHISHEK DHANIA</td><td>GAUTAM SINGH</td><td>MONU DEVI</td><td>023F</td><td>35</td><td>023F</td><td>AAF</td><td>020F</td><td>-</td><td>101</td><td>-</td></tr><tr><td>1634664</td><td>AJAY</td><td>SANJAY</td><td>SAJANA DEVI</td><td>64</td><td>63</td><td>46</td><td>59</td><td>51</td><td>56.33%</td><td>338</td><td>56.33%</td></tr><tr><td>1634665</td><td>AMAN</td><td>SUNIL KUMAR</td><td>SANTOSH</td><td>68</td><td>59</td><td>51</td><td>65</td><td>37</td><td>53.83%</td><td>323</td><td>53.83%</td></tr><tr><td>1634666</td><td>ANISHA</td><td>VIJENDRA KUMAR</td><td>KAVITA</td><td>083D</td><td>74</td><td>64</td><td>077D</td><td>71</td><td>74.00%</td><td>444</td><td>74.00%</td></tr><tr><td>1634667</td><td>ANJU BHARIA</td><td>PRADEEP KUMAR</td><td>SUMAN DEVI</td><td>097D</td><td>097D</td><td>087D</td><td>094D</td><td>098D</td><td>95.33%</td><td>572</td><td>95.33%</td></tr><tr><td>1634668</td><td>ANKITA</td><td>SHIVLAL</td><td>SUMITRA</td><td>097D</td><td>091D</td><td>079D</td><td>087D</td><td>091D</td><td>90.17%</td><td>541</td><td>90.17%</td></tr><tr><td>1634669</td><td>ANOOP</td><td>RAJENDRA</td><td>KAVITA</td><td>38</td><td>48</td><td>43</td><td>41</td><td>030G</td><td>39.00%</td><td>234</td><td>39.00%</td></tr><tr><td>1634670</td><td>ANSHU POONIA</td><td>RAJPAL SINGH</td><td>MANJU DEVI</td><td>092D</td><td>62</td><td>53</td><td>078D</td><td>49</td><td>66.67%</td><td>400</td><td>66.67%</td></tr><tr><td>1634671</td><td>ANUP</td><td>PURUSHOTTAM</td><td>RAJBALA</td><td>076D</td><td>70</td><td>69</td><td>075D</td><td>68</td><td>72.00%</td><td>432</td><td>72.00%</td></tr><tr><td>1634672</td><td>ARMAN</td><td>FIROJ KHA</td><td>HASINA BEGAM</td><td>61</td><td>52</td><td>43</td><td>54</td><td>36</td><td>50.50%</td><td>303</td><td>50.50%</td></tr><tr><td>1634673</td><td>AYUSH SINGH</td><td>NARENDRA KUMAR</td><td>KAUSHALYA DEVI</td><td>092D</td><td>097D</td><td>71</td><td>082D</td><td>075D</td><td>83.67%</td><td>502</td><td>83.67%</td></tr><tr><td>1634674</td><td>DEVANSH BADETIA</td><td>KESHAR DEV BADETIA</td><td>MUKESH DEVI</td><td>095D</td><td>094D</td><td>086D</td><td>086D</td><td>099D</td><td>92.00%</td><td>552</td><td>92.00%</td></tr><tr><td>1634675</td><td>DIPESH</td><td>DINESH KUMAR</td><td>SUMAN</td><td>092D</td><td>092D</td><td>081D</td><td>083D</td><td>077D</td><td>85.83%</td><td>515</td><td>85.83%</td></tr><tr><td>1634676</td><td>DIVYA</td><td>CHARAN SINGH</td><td>ANITA</td><td>092D</td><td>67</td><td>70</td><td>082D</td><td>077D</td><td>79.83%</td><td>479</td><td>79.83%</td></tr><tr><td>1634677</td><td>DIVYA</td><td>PAWAN KUMAR</td><td>LALITA DEVI</td><td>094D</td><td>095D</td><td>085D</td><td>087D</td><td>086D</td><td>90.67%</td><td>544</td><td>90.67%</td></tr><tr><td>1634678</td><td>GAURAV</td><td>LALCHAND</td><td>DROPATI</td><td>69</td><td>57</td><td>46</td><td>63</td><td>44</td><td>57.50%</td><td>345</td><td>57.50%</td></tr><tr><td>1634679</td><td>HANSHIKA JANGIR</td><td>VINOD JANGIR</td><td>SUMAN DEVI</td><td>58</td><td>51</td><td>44</td><td>59</td><td>42</td><td>50.50%</td><td>303</td><td>50.50%</td></tr><tr><td>1634680</td><td>HIMANSHU</td><td>NARENDRA KUMAR</td><td>ROSHAN DEVI</td><td>091D</td><td>093D</td><td>085D</td><td>091D</td><td>090D</td><td>90.83%</td><td>545</td><td>90.83%</td></tr><tr><td>1634681</td><td>HIMANSHU</td><td>VINOD</td><td>SONU</td><td>74</td><td>083D</td><td>70</td><td>079D</td><td>075D</td><td>78.83%</td><td>473</td><td>78.83%</td></tr><tr><td>1634682</td><td>HIMANSHU RATHORE</td><td>NARENDRA SINGH</td><td>NITU KANWAR</td><td>085D</td><td>079D</td><td>63</td><td>084D</td><td>61</td><td>77.33%</td><td>464</td><td>77.33%</td></tr><tr><td>1634683</td><td>HIMANSHU SAINI</td><td>SURESH SAINI</td><td>NISHA DEVI</td><td>66</td><td>72</td><td>67</td><td>077D</td><td>64</td><td>71.17%</td><td>427</td><td>71.17%</td></tr><tr><td>1634684</td><td>JYOTI KANWAR</td><td>RANJEET SINGH</td><td>SAROJ KANWAR</td><td>71</td><td>61</td><td>59</td><td>080D</td><td>56</td><td>64.83%</td><td>389</td><td>64.83%</td></tr><tr><td>1634685</td><td>KALPANA</td><td>SATYAPAL</td><td>MANJU</td><td>092D</td><td>082D</td><td>076D</td><td>087D</td><td>62</td><td>80.33%</td><td>482</td><td>80.33%</td></tr><tr><td>1634686</td><td>KOMAL</td><td>SANDEEP</td><td>SUMAN DEVI</td><td>086D</td><td>73</td><td>076D</td><td>096D</td><td>71</td><td>81.83%</td><td>491</td><td>81.83%</td></tr><tr><td>1634687</td><td>LOKESH</td><td>JAISINGH</td><td>GAYATRI DEVI</td><td>57</td><td>58</td><td>52</td><td>57</td><td>51</td><td>52.83%</td><td>317</td><td>52.83%</td></tr><tr><td>1634688</td><td>MAHESH SINGH</td><td>KISHORE SINGH</td><td>SUNITA</td><td>44</td><td>52</td><td>51</td><td>48</td><td>61</td><td>52.00%</td><td>312</td><td>52.00%</td></tr><tr><td>1634689</td><td>MOHIT SHARMA</td><td>KAPIL DEV SHARMA</td><td>SANTOSH</td><td>59</td><td>60</td><td>54</td><td>62</td><td>59</td><td>58.00%</td><td>348</td><td>58.00%</td></tr><tr><td>1634690</td><td>MUSKAN</td><td>PRATAP SINGH</td><td>SUNITA</td><td>62</td><td>63</td><td>56</td><td>58</td><td>49</td><td>59.17%</td><td>355</td><td>59.17%</td></tr><tr><td>1634691</td><td>MUSKAN BANO</td><td>SAMSUDEEN</td><td>MADINA BANO</td><td>64</td><td>69</td><td>53</td><td>63</td><td>51</td><td>59.67%</td><td>358</td><td>59.67%</td></tr><tr><td>1634692</td><td>NAMAN KUMAR</td><td>SOMVEER</td><td>POONAM</td><td>085D</td><td>63</td><td>62</td><td>076D</td><td>61</td><td>71.50%</td><td>429</td><td>71.50%</td></tr><tr><td>1634693</td><td>NEHA KUMARI</td><td>SUNIL KUMAR</td><td>BIRMATI DEVI</td><td>54</td><td>55</td><td>64</td><td>57</td><td>54</td><td>55.17%</td><td>331</td><td>55.17%</td></tr><tr><td>1634694</td><td>NIKITA</td><td>BALWAN</td><td>SUSHILA</td><td>091D</td><td>091D</td><td>084D</td><td>094D</td><td>075D</td><td>88.33%</td><td>530</td><td>88.33%</td></tr><tr><td>1634695</td><td>NISHANT</td><td>BHARAT SINGH</td><td>POONAM KANWAR</td><td>40</td><td>45</td><td>43</td><td>46</td><td>38</td><td>41.17%</td><td>247</td><td>41.17%</td></tr><tr><td>1634696</td><td>NITESH</td><td>RANDHEER</td><td>NEELAM DEVI</td><td>091D</td><td>74</td><td>70</td><td>078D</td><td>68</td><td>78.50%</td><td>471</td><td>78.50%</td></tr><tr><td>1634697</td><td>PANKAJ</td><td>SANJAY</td><td>POOJA DEVI</td><td>087D</td><td>088D</td><td>083D</td><td>080D</td><td>084D</td><td>85.67%</td><td>514</td><td>85.67%</td></tr><tr><td>1634698</td><td>PIYUSH</td><td>VIJENDRA</td><td>SUNITA</td><td>089D</td><td>091D</td><td>082D</td><td>085D</td><td>082D</td><td>86.00%</td><td>516</td><td>86.00%</td></tr><tr><td>1634699</td><td>POOJA</td><td>JAISINGH</td><td>GAYATRI DEVI</td><td>083D</td><td>72</td><td>74</td><td>092D</td><td>62</td><td>75.50%</td><td>453</td><td>75.50%</td></tr><tr><td>1634700</td><td>PRAMJEET</td><td>RAMBIR</td><td>SUNITA DEVI</td><td>077D</td><td>078D</td><td>72</td><td>076D</td><td>081D</td><td>76.83%</td><td>461</td><td>76.83%</td></tr><tr><td>1634701</td><td>PRATHAMESH SINGH</td><td>BHAWANI SINGH</td><td>MANJU KANWAR</td><td>71</td><td>093D</td><td>079D</td><td>080D</td><td>083D</td><td>82.00%</td><td>492</td><td>82.00%</td></tr><tr><td>1634702</td><td>PRAVEEN BENIWAL</td><td>SANWARMAL BENIWAL</td><td>KAMLA DEVI</td><td>54</td><td>60</td><td>51</td><td>46</td><td>41</td><td>52.17%</td><td>313</td><td>52.17%</td></tr><tr><td>1634703</td><td>PREETAM</td><td>NARESH KUMAR</td><td>BALA DEVI</td><td>50</td><td>53</td><td>47</td><td>52</td><td>45</td><td>47.67%</td><td>286</td><td>47.67%</td></tr><tr><td>1634704</td><td>PREETI</td><td>ANIL KUMAR</td><td>ANITA</td><td>095D</td><td>081D</td><td>083D</td><td>091D</td><td>58</td><td>81.83%</td><td>491</td><td>81.83%</td></tr><tr><td>1634705</td><td>PRINCE SINGH SHEKHAWAT</td><td>GAJENDRA SINGH SHEKHAWAT</td><td>NEETU SINGH</td><td>46</td><td>55</td><td>46</td><td>41</td><td>43</td><td>47.17%</td><td>283</td><td>47.17%</td></tr><tr><td>1634706</td><td>PRIYA</td><td>SOMVEER</td><td>SUNITA</td><td>095D</td><td>096D</td><td>088D</td><td>092D</td><td>099D</td><td>94.50%</td><td>567</td><td>94.50%</td></tr><tr><td>1634707</td><td>PRIYANKA</td><td>RAJVEER</td><td>ANITA</td><td>098D</td><td>095D</td><td>091D</td><td>097D</td><td>099D</td><td>96.50%</td><td>579</td><td>96.50%</td></tr><tr><td>1634708</td><td>PRIYANSHU</td><td>PRAKASH SINGH</td><td>NIRMALA</td><td>096D</td><td>094D</td><td>086D</td><td>095D</td><td>096D</td><td>94.33%</td><td>566</td><td>94.33%</td></tr><tr><td>1634709</td><td>RAHUL SINGH</td><td>VIKRAM SINGH</td><td>ANJU KANWAR</td><td>098D</td><td>099D</td><td>089D</td><td>098D</td><td>099D</td><td>96.83%</td><td>581</td><td>96.83%</td></tr><tr><td>1634710</td><td>RAJNESH</td><td>LAXMAN KUMAR</td><td>MANISHA</td><td>51</td><td>68</td><td>52</td><td>44</td><td>42</td><td>51.17%</td><td>307</td><td>51.17%</td></tr><tr><td>1634711</td><td>RAVI KUMAR</td><td>RAKESH</td><td>SANGEETA</td><td>74</td><td>72</td><td>71</td><td>079D</td><td>55</td><td>71.50%</td><td>429</td><td>71.50%</td></tr><tr><td>1634712</td><td>RINKU</td><td>SANDEEP</td><td>SUMAN DEVI</td><td>093D</td><td>080D</td><td>078D</td><td>091D</td><td>64</td><td>82.17%</td><td>493</td><td>82.17%</td></tr><tr><td>1634713</td><td>RITESH KUMAR</td><td>RAJESH</td><td>AJAD DEVI</td><td>71</td><td>082D</td><td>65</td><td>68</td><td>63</td><td>71.00%</td><td>426</td><td>71.00%</td></tr><tr><td>1634714</td><td>SACHIN KUMAR</td><td>MAHENDRA SINGH</td><td>ANITA DEVI</td><td>65</td><td>72</td><td>56</td><td>63</td><td>51</td><td>64.33%</td><td>386</td><td>64.33%</td></tr><tr><td>1634715</td><td>SAHIL</td><td>VINOD KUMAR</td><td>SUMAN DEVI</td><td>34</td><td>48</td><td>36</td><td>36</td><td>027G</td><td>36.00%</td><td>216</td><td>36.00%</td></tr><tr><td>1634716</td><td>SAKSHI</td><td>MAHENDER SINGH</td><td>GITA DEVI</td><td>085D</td><td>088D</td><td>73</td><td>089D</td><td>62</td><td>80.67%</td><td>484</td><td>80.67%</td></tr><tr><td>1634717</td><td>SARITA</td><td>LALCHAND</td><td>DROPATI</td><td>089D</td><td>084D</td><td>080D</td><td>098D</td><td>63</td><td>83.83%</td><td>503</td><td>83.83%</td></tr><tr><td>1634718</td><td>SARITA</td><td>PRADEEP KUMAR SONANIA</td><td>SHARMILA</td><td>73</td><td>72</td><td>62</td><td>075D</td><td>48</td><td>67.67%</td><td>406</td><td>67.67%</td></tr><tr><td>1634719</td><td>SHIVAM</td><td>RAKESH</td><td>SUNITA</td><td>082D</td><td>67</td><td>61</td><td>73</td><td>52</td><td>67.00%</td><td>402</td><td>67.00%</td></tr><tr><td>1634720</td><td>SHUBHAM</td><td>DEEPAK KUMAR</td><td>SAROJ</td><td>078D</td><td>69</td><td>65</td><td>59</td><td>54</td><td>64.17%</td><td>385</td><td>64.17%</td></tr><tr><td>1634721</td><td>SIKANDAR SINGH</td><td>SURENDRA SINGH</td><td>PRIYANKA DEVI</td><td></td><td></td><td></td><td></td><td></td><td>-</td><td>-</td><td>-</td></tr><tr><td>1634722</td><td>SNEHA KUMARI</td><td>MUKESH</td><td>MUKESH</td><td>090D</td><td>090D</td><td>077D</td><td>081D</td><td>60</td><td>80.00%</td><td>480</td><td>80.00%</td></tr><tr><td>1634723</td><td>SONAKSHI</td><td>RAJKUMAR</td><td>RAKHI</td><td>088D</td><td>093D</td><td>075D</td><td>084D</td><td>59</td><td>81.00%</td><td>486</td><td>81.00%</td></tr><tr><td>1634724</td><td>SONU</td><td>RAJPAL</td><td>ANAR DEVI</td><td>080D</td><td>63</td><td>079D</td><td>092D</td><td>71</td><td>78.67%</td><td>472</td><td>78.67%</td></tr><tr><td>1634725</td><td>SUMIT</td><td>KULDEEP</td><td>BALA DEVI</td><td>74</td><td>69</td><td>66</td><td>73</td><td>59</td><td>71.33%</td><td>428</td><td>71.33%</td></tr><tr><td>1634726</td><td>SUSHILA</td><td>NAROTTAM</td><td>SUMAN</td><td>094D</td><td>079D</td><td>081D</td><td>084D</td><td>62</td><td>82.00%</td><td>492</td><td>82.00%</td></tr><tr><td>1634727</td><td>TANISH</td><td>SATYENDER SINGH BHALOTHIA</td><td>SUNITA DEVI</td><td>091D</td><td>72</td><td>083D</td><td>097D</td><td>091D</td><td>87.50%</td><td>525</td><td>87.50%</td></tr><tr><td>1634728</td><td>TANUSHREE SHEKHAWAT</td><td>NAUNIHAL SINGH</td><td>PINKY KANWAR</td><td>086D</td><td>081D</td><td>73</td><td>089D</td><td>54</td><td>76.00%</td><td>456</td><td>76.00%</td></tr><tr><td>1634729</td><td>TUSHAR</td><td>RAJPAL SINGH</td><td>SHARMILA DEVI</td><td>098D</td><td>089D</td><td>091D</td><td>095D</td><td>099D</td><td>93.67%</td><td>562</td><td>93.67%</td></tr><tr><td>1634730</td><td>VANSHIKA</td><td>VINOD</td><td>SONU</td><td>099D</td><td>095D</td><td>092D</td><td>099D</td><td>098D</td><td>97.17%</td><td>583</td><td>97.17%</td></tr><tr><td>1634731</td><td>VIKASH</td><td>RAJENDRA SINGH</td><td>KAVITA DEVI</td><td>49</td><td>48</td><td>51</td><td>53</td><td>47</td><td>50.00%</td><td>300</td><td>50.00%</td></tr><tr><td>1634732</td><td>VINITA POONIA</td><td>VINOD KUMAR</td><td>MANJITA DEVI</td><td>091D</td><td>095D</td><td>090D</td><td>094D</td><td>090D</td><td>93.33%</td><td>560</td><td>93.33%</td></tr><tr><td>1634733</td><td>VISHAKHA</td><td>RAJENDRA SINGH</td><td>MANJU DEVI</td><td>096D</td><td>094D</td><td>088D</td><td>098D</td><td>089D</td><td>93.50%</td><td>561</td><td>93.50%</td></tr><tr><td>1634734</td><td>YOGITA</td><td>SURENDRA</td><td>SAROJ</td><td>085D</td><td>083D</td><td>075D</td><td>076D</td><td>63</td><td>78.17%</td><td>469</td><td>78.17%</td></tr><tr><td>1634735</td><td>YUKTI</td><td>SOMBIR SINGH</td><td>PRAVEEN DEVI</td><td>091D</td><td>74</td><td>64</td><td>075D</td><td>078D</td><td>78.67%</td><td>472</td><td>78.67%</td></tr><tr><td>1634736</td><td>YUVRAJ</td><td>SUMER SINGH</td><td>POOJA</td><td>49</td><td>49</td><td>47</td><td>34</td><td>37</td><td>43.50%</td><td>261</td><td>43.50%</td></tr><tr><td>1634737</td><td>AKASH</td><td>SAMSHER SINGH</td><td>BIMLA</td><td>58</td><td>68</td><td>60</td><td>71</td><td>39</td><td>57.67%</td><td>346</td><td>57.67%</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    let percentageColIndexes = [];
+
+    function handleFile(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const workbook = XLSX.read(e.target.result, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+          header: 1,
+          raw: false,
+          defval: "",
+        });
+
+        renderTable(sheetData);
+      };
+
+      reader.readAsBinaryString(file);
+    }
+
+    function renderTable(data) {
+      const tableHead = document.getElementById("tableHead");
+      const tableBody = document.getElementById("tableBody");
+
+      tableHead.innerHTML = "";
+      tableBody.innerHTML = "";
+      percentageColIndexes = [];
+
+      if (data.length > 0) {
+        const headers = data[0];
+        const rows = data.slice(1);
+
+        // Find columns which likely are percentage columns (case insensitive)
+        headers.forEach((header, index) => {
+          if (
+            typeof header === "string" &&
+            header.toLowerCase().includes("percentage")
+          ) {
+            percentageColIndexes.push(index);
+          }
+        });
+
+        // Render headers
+        const headerRow = headers.map((header) => `<th>${header}</th>`).join("");
+        tableHead.innerHTML = `<tr>${headerRow}</tr>`;
+
+        // Render each row
+        rows.forEach((row) => {
+          const rowHTML = row
+            .map((cell, idx) => {
+              // If current col is percentage col and value looks decimal (like 0.6167), convert to percent format
+              if (
+                percentageColIndexes.includes(idx) &&
+                cell !== "" &&
+                !isNaN(cell) &&
+                parseFloat(cell) <= 1 &&
+                parseFloat(cell) >= 0
+              ) {
+                return `<td>${(parseFloat(cell) * 100).toFixed(2)}%</td>`;
+              }
+              return `<td>${cell}</td>`;
+            })
+            .join("");
+          tableBody.innerHTML += `<tr>${rowHTML}</tr>`;
+        });
+      }
+    }
+
+    function filterTable() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#excelTable tbody tr");
+      rows.forEach((row) => {
+        const rowText = row.innerText.toLowerCase();
+        row.style.display = rowText.includes(searchInput) ? "" : "none";
+      });
+    }
+
+    function exportTableToExcel(tableID, filename = "table_data") {
+      const table = document.getElementById(tableID);
+
+      // Prepare data array
+      const rows = [];
+      const headers = Array.from(table.querySelectorAll("thead th")).map(
+        (th) => th.innerText
+      );
+      rows.push(headers);
+
+      // Loop through table rows
+      Array.from(table.querySelectorAll("tbody tr")).forEach((tr) => {
+        const row = Array.from(tr.querySelectorAll("td")).map((td, idx) => {
+          const text = td.innerText;
+          // For percentage columns, convert "61.67%" -> 0.6167 decimal
+          if (percentageColIndexes.includes(idx) && text.endsWith("%")) {
+            return parseFloat(text.replace("%", "")) / 100;
+          }
+          return text;
+        });
+        rows.push(row);
+      });
+
+      // Create worksheet
+      const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+      // Set percentage formatting for relevant columns
+      percentageColIndexes.forEach((colIndex) => {
+        for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
+          const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
+          if (worksheet[cellAddress]) {
+            worksheet[cellAddress].z = "0.00%";
+          }
+        }
+      });
+
+      // Freeze first row in excel
+      worksheet["!freeze"] = { xSplit: 0, ySplit: 1 };
+
+      // Create workbook and append sheet
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+      // Save file
+      XLSX.writeFile(workbook, `${filename}.xlsx`);
+    }
+  </script>
+
+
+</body></html>
